@@ -1,29 +1,28 @@
 package com.empresa.api_level_up_movil.service;
 
-import com.empresa.api_level_up_movil.dto.request.ClienteRequestDTO;
-import com.empresa.api_level_up_movil.dto.response.ClienteResponseDTO;
-import com.empresa.api_level_up_movil.model.Cliente;
-import com.empresa.api_level_up_movil.repository.ClienteRepository;
+import com.empresa.api_level_up_movil.dto.request.UserRequestDTO;
+import com.empresa.api_level_up_movil.dto.response.UserResponseDTO;
+import com.empresa.api_level_up_movil.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClienteService {
+public class UserService {
 
     @Autowired
-    private ClienteRepository clienteRepo;
+    private com.empresa.api_level_up_movil.repository.UserRepository clienteRepo;
 
-    public ClienteResponseDTO saveCliente(ClienteRequestDTO req) {
+    public UserResponseDTO saveUser(UserRequestDTO req) {
 
         try {
 
-            Cliente cliente = new Cliente();
+            User cliente = new User();
             cliente.setNombre(req.getNombre());
             cliente.setApellido(req.getApellido());
             clienteRepo.save(cliente);
 
-            ClienteResponseDTO res = new ClienteResponseDTO();
-            res.setId_cliente(cliente.getId_cliente());
+            UserResponseDTO res = new UserResponseDTO();
+            res.setId_user(cliente.getId_user());
             res.setNombre(cliente.getNombre());
             res.setApellido(cliente.getApellido());
 

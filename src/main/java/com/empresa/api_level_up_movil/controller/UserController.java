@@ -1,8 +1,8 @@
 package com.empresa.api_level_up_movil.controller;
 
-import com.empresa.api_level_up_movil.dto.request.ClienteRequestDTO;
-import com.empresa.api_level_up_movil.dto.response.ClienteResponseDTO;
-import com.empresa.api_level_up_movil.service.ClienteService;
+import com.empresa.api_level_up_movil.dto.request.UserRequestDTO;
+import com.empresa.api_level_up_movil.dto.response.UserResponseDTO;
+import com.empresa.api_level_up_movil.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v2/clientes")
-public class ClienteController {
+@RequestMapping("api/v2/users")
+public class UserController {
 
     @Autowired
-    private ClienteService clienteService;
+    private UserService userService;
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> guardarCliente(@RequestBody ClienteRequestDTO req) {
+    public ResponseEntity<UserResponseDTO> guardarUser(@RequestBody UserRequestDTO req) {
 
         try {
 
-            ClienteResponseDTO resp = clienteService.saveCliente(req);
+            UserResponseDTO resp = userService.saveUser(req);
             if (resp != null) {
                 return ResponseEntity.ok(resp);
             }

@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_cliente;
+    private Long id_user;
 
     @Column(nullable = false)
     private String nombre;
@@ -25,8 +25,8 @@ public class Cliente {
     @Column(nullable = false)
     private String apellido;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonManagedReference("cliente-pedidos")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference("user-pedidos")
     private List<Pedido> pedidos;
 
 }

@@ -24,9 +24,9 @@ public class Pedido {
     private int numero_pedido;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_cliente_fk", nullable = false)
-    @JsonBackReference("cliente-pedidos")
-    private Cliente cliente;
+    @JoinColumn(name = "id_user_fk", nullable = false)
+    @JsonBackReference("user-pedidos")
+    private User user;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonManagedReference("pedido-detalle_pedidos")

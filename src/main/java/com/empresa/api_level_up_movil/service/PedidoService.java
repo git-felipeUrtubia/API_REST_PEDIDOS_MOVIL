@@ -4,11 +4,11 @@ import com.empresa.api_level_up_movil.dto.request.DetallePedidoRequestDTO;
 import com.empresa.api_level_up_movil.dto.request.PedidoRequestDTO;
 import com.empresa.api_level_up_movil.dto.response.DetallePedidoResponseDTO;
 import com.empresa.api_level_up_movil.dto.response.PedidoResponseDTO;
-import com.empresa.api_level_up_movil.model.Cliente;
+import com.empresa.api_level_up_movil.model.User;
 import com.empresa.api_level_up_movil.model.DetallePedido;
 import com.empresa.api_level_up_movil.model.Pedido;
 import com.empresa.api_level_up_movil.model.Producto;
-import com.empresa.api_level_up_movil.repository.ClienteRepository;
+import com.empresa.api_level_up_movil.repository.UserRepository;
 import com.empresa.api_level_up_movil.repository.PedidoRepository;
 import com.empresa.api_level_up_movil.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class PedidoService {
     private PedidoRepository pedidoRepo;
 
     @Autowired
-    private ClienteRepository clienteRepo;
+    private UserRepository userRepo;
 
     @Autowired
     private ProductoRepository productoRepo;
@@ -41,8 +41,8 @@ public class PedidoService {
 
             ped.setNumero_pedido(req.getNumero_pedido());
 
-            Cliente cliente = clienteRepo.findById(req.getCliente_id()).get();
-            ped.setCliente(cliente);
+            User user = userRepo.findById(req.getUser_id()).get();
+            ped.setUser(user);
 
             List<DetallePedido> detalle_pedidos = new ArrayList<>();
             for (DetallePedidoRequestDTO det : req.getDetalles()) {
@@ -69,7 +69,7 @@ public class PedidoService {
             PedidoResponseDTO res = new PedidoResponseDTO();
 
             res.setId_pedido(ped.getId_pedido());
-            res.setId_cliente(ped.getCliente().getId_cliente());
+            res.setId_user(ped.getUser().getId_user());
             res.setNumero_pedido(ped.getNumero_pedido());
 
             List<DetallePedidoResponseDTO> dtRes = new ArrayList<>();
@@ -105,7 +105,7 @@ public class PedidoService {
                 PedidoResponseDTO dto = new PedidoResponseDTO();
 
                 dto.setId_pedido(ped.getId_pedido());
-                dto.setId_cliente(ped.getCliente().getId_cliente());
+                dto.setId_user(ped.getUser().getId_user());
                 dto.setNumero_pedido(ped.getNumero_pedido());
 
                 List<DetallePedidoResponseDTO> dtRes = new ArrayList<>();

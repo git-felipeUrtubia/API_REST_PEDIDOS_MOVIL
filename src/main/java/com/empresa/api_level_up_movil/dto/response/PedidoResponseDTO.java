@@ -8,7 +8,7 @@ import java.util.List;
 
 @JsonPropertyOrder({
         "id_pedido",
-        "id_cliente",
+        "id_user",
         "numero_pedido",
         "detalle_pedidos"
 })
@@ -16,7 +16,7 @@ import java.util.List;
 public class PedidoResponseDTO {
 
     private Long id_pedido;
-    private Long id_cliente;
+    private Long id_user;
     private int numero_pedido;
     private List<DetallePedidoResponseDTO> detalle_pedidos;
 

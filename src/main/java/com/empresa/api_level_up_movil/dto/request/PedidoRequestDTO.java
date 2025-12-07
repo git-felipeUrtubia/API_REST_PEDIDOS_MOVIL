@@ -8,7 +8,7 @@ import java.util.List;
 public class PedidoRequestDTO {
 
     private int numero_pedido;
-    private Long cliente_id;
+    private Long user_id;
     private List<DetallePedidoRequestDTO> detalles;
 
 
