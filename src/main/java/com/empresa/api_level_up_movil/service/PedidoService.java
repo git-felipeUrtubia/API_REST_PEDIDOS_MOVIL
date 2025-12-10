@@ -267,4 +267,51 @@ public class PedidoService {
 
     }
 
+    public List<PedidoResponseDTO.ById> getPedidosByIdUser(Long id_user) {
+
+        User user = userRepo.findById(id_user).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+        List<PedidoResponseDTO.ById> DTOS = new ArrayList<>();
+        for (Pedido ped : user.getPedidos()) {
+            PedidoResponseDTO.ById dto = new  PedidoResponseDTO.ById();
+            dto.setNumero_pedido(ped.getNumero_pedido());
+            dto.setEstado(ped.getEstado());
+
+            List<PagoResponseDTO> pagosResDTO = new ArrayList<>();
+
+            List<Pago> pagos = ped.getPagos();
+            for (Pago pago : pagos) {
+                PagoResponseDTO p = new PagoResponseDTO();
+
+                p.setId_pago(pago.getId_pago());
+                p.setNumero_pago(pago.getNumero_pago());
+                p.setSubtotal(pago.getSubtotal());
+                p.setIva(pago.getIva());
+                p.setMonto(pago.getMonto());
+                p.setTipo(pago.getTipo());
+                p.setFecha_registro(pago.getFecha_registro());
+                pagosResDTO.add(p);
+            }
+            dto.setPagos(pagosResDTO);
+
+            List<DetallePedidoResponseDTO.ById> detalle_pedidosResDTO = new ArrayList<>();
+            for (DetallePedido det : ped.getDetalle_pedidos()) {
+
+                DetallePedidoResponseDTO.ById d = new DetallePedidoResponseDTO.ById();
+
+                d.setCant(det.getCant());
+                d.setId_producto(det.getProducto().getId_producto());
+                Producto producto = productoRepo.findById(det.getProducto().getId_producto()).orElse(null);
+                d.setNombre(producto.getNombre());
+                detalle_pedidosResDTO.add(d);
+            }
+            dto.setDetalle_pedidos(detalle_pedidosResDTO);
+            DTOS.add(dto);
+        }
+        return DTOS;
+    }
+
 }

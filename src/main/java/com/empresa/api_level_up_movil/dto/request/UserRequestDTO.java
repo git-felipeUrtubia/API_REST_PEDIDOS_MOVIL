@@ -14,4 +14,14 @@ public class UserRequestDTO {
     private String rol;
     private LocalDate fecha_registro;
 
+    @Data
+    public static class UpdateUser {
+
+        private String nombre;
+        private String apellido;
+        private String email;
+        private String password;
+
+    }
+
 }

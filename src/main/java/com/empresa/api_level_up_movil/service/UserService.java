@@ -73,6 +73,35 @@ public class UserService {
         return null;
     }
 
+    public UserResponseDTO updateUser(Long id_user, UserRequestDTO.UpdateUser req) {
+
+        User  user = userRepo.findById(id_user).orElse(null);
+
+        if (user == null) {
+            return null;
+        }
+
+        user.setPassword(req.getPassword());
+        user.setNombre(req.getNombre());
+        user.setApellido(req.getApellido());
+        user.setEmail(req.getEmail());
+
+        userRepo.save(user);
+
+
+        UserResponseDTO res= new UserResponseDTO();
+
+        res.setId_user(user.getId_user());
+        res.setNombre(user.getNombre());
+        res.setApellido(user.getApellido());
+        res.setEmail(user.getEmail());
+        res.setRol(user.getRol());
+        res.setFecha_registro(user.getFecha_registro());
+
+        return res;
+
+    }
+
 
 
 }

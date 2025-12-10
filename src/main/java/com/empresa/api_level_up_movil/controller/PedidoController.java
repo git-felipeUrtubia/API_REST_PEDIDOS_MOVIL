@@ -161,11 +161,36 @@ public class PedidoController {
             UserResponseDTO user = userService.getUserByEmail(email);
 
 
-            if (user == null || !user.getRol().equalsIgnoreCase("admin")) {
+            if (user == null || !user.getRol().equals("admin")) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
             }
 
             PedidoResponseDTO.ById dto = pedidoService.getPedidoById(id_pedido);
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(dto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/user/{id_user}")
+    public ResponseEntity<?> findPedidoByIdUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long id_user) {
+        try {
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            String token = authHeader.substring(7);
+            String email = jwtService.validateTokenAndGetEmail(token);
+
+            UserResponseDTO user = userService.getUserByEmail(email);
+
+            List<PedidoResponseDTO.ById> dto = pedidoService.getPedidosByIdUser(id_user);
+
             if (dto == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

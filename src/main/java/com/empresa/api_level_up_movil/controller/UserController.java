@@ -83,4 +83,35 @@ public class UserController {
         }
     }
 
+    @PutMapping("/user/update/{id}")
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization")  String authHeader, @PathVariable Long id, @RequestBody UserRequestDTO.UpdateUser req) {
+
+        try {
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            String token = authHeader.substring(7);
+            String email = jwtService.validateTokenAndGetEmail(token);
+
+            UserResponseDTO userRes = userService.getUserByEmail(email);
+
+            if (userRes == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            UserResponseDTO res = userService.updateUser(id, req);
+            if (res == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(res);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
 }
