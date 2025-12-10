@@ -1,21 +1,23 @@
 package com.empresa.api_level_up_movil.service;
 
 import com.empresa.api_level_up_movil.dto.request.DetallePedidoRequestDTO;
+import com.empresa.api_level_up_movil.dto.request.PagoRequestDTO;
 import com.empresa.api_level_up_movil.dto.request.PedidoRequestDTO;
 import com.empresa.api_level_up_movil.dto.response.DetallePedidoResponseDTO;
+import com.empresa.api_level_up_movil.dto.response.PagoResponseDTO;
 import com.empresa.api_level_up_movil.dto.response.PedidoResponseDTO;
-import com.empresa.api_level_up_movil.model.User;
-import com.empresa.api_level_up_movil.model.DetallePedido;
-import com.empresa.api_level_up_movil.model.Pedido;
-import com.empresa.api_level_up_movil.model.Producto;
+import com.empresa.api_level_up_movil.dto.response.UserResponseDTO;
+import com.empresa.api_level_up_movil.model.*;
 import com.empresa.api_level_up_movil.repository.UserRepository;
 import com.empresa.api_level_up_movil.repository.PedidoRepository;
 import com.empresa.api_level_up_movil.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.access.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -25,6 +27,9 @@ public class PedidoService {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ProductoRepository productoRepo;
@@ -40,7 +45,7 @@ public class PedidoService {
             Pedido ped = new Pedido();
 
             ped.setNumero_pedido(req.getNumero_pedido());
-
+            ped.setEstado(req.getEstado());
             User user = userRepo.findById(req.getUser_id()).get();
             ped.setUser(user);
 
@@ -64,6 +69,20 @@ public class PedidoService {
             }
             ped.setDetalle_pedidos(detalle_pedidos);
 
+            List<Pago> pagos = new ArrayList<>();
+            for(PagoRequestDTO pago : req.getPagos()) {
+                Pago p = new Pago();
+                p.setNumero_pago(pago.getNumero_pago());
+                p.setSubtotal(pago.getSubtotal());
+                p.setIva(pago.getIva());
+                p.setMonto(pago.getMonto());
+                p.setTipo(pago.getTipo());
+                p.setFecha_registro(pago.getFecha_registro());
+                p.setPedido(ped);
+                pagos.add(p);
+            }
+            ped.setPagos(pagos);
+
             pedidoRepo.save(ped);
 
             PedidoResponseDTO res = new PedidoResponseDTO();
@@ -71,7 +90,7 @@ public class PedidoService {
             res.setId_pedido(ped.getId_pedido());
             res.setId_user(ped.getUser().getId_user());
             res.setNumero_pedido(ped.getNumero_pedido());
-
+            res.setEstado(ped.getEstado());
             List<DetallePedidoResponseDTO> dtRes = new ArrayList<>();
             for (DetallePedido det : ped.getDetalle_pedidos()) {
 
@@ -82,8 +101,22 @@ public class PedidoService {
                 dtRes.add(d);
 
             }
-
             res.setDetalle_pedidos(dtRes);
+
+            List<PagoResponseDTO> pagosResDTO = new ArrayList<>();
+            for (Pago pago : ped.getPagos()) {
+                PagoResponseDTO p = new PagoResponseDTO();
+                p.setId_pago(pago.getId_pago());
+                p.setNumero_pago(pago.getNumero_pago());
+                p.setSubtotal(pago.getSubtotal());
+                p.setIva(pago.getIva());
+                p.setMonto(pago.getMonto());
+                p.setTipo(pago.getTipo());
+                p.setFecha_registro(pago.getFecha_registro());
+                pagosResDTO.add(p);
+            }
+            res.setPagos(pagosResDTO);
+
             return res;
 
         } catch (Exception e) {
@@ -93,42 +126,98 @@ public class PedidoService {
 
     }
 
-    public List<PedidoResponseDTO> findAllPedidos() {
+    public List<PedidoResponseDTO> findAllPedidos(String email) {
 
-        try {
 
-            List<Pedido> pedidos = pedidoRepo.findAll();
 
-            List<PedidoResponseDTO> res = new ArrayList<>();
-            for (Pedido ped : pedidos) {
-
-                PedidoResponseDTO dto = new PedidoResponseDTO();
-
-                dto.setId_pedido(ped.getId_pedido());
-                dto.setId_user(ped.getUser().getId_user());
-                dto.setNumero_pedido(ped.getNumero_pedido());
-
-                List<DetallePedidoResponseDTO> dtRes = new ArrayList<>();
-                for (DetallePedido det : ped.getDetalle_pedidos()) {
-
-                    DetallePedidoResponseDTO d = new DetallePedidoResponseDTO();
-
-                    d.setCant(det.getCant());
-                    d.setId_producto(det.getProducto().getId_producto());
-                    dtRes.add(d);
-
-                }
-
-                dto.setDetalle_pedidos(dtRes);
-                res.add(dto);
-            }
-            return res;
-
-        } catch (Exception e) {
-            System.out.println("Error Service: " + e.getMessage());
-            return null;
+        UserResponseDTO user = userService.getUserByEmail(email);
+        if(user.getRol().equals("user")) {
+            throw new AccessDeniedException("El usuario con rol 'user' no tiene permiso para ver todos los pedidos.");
         }
 
+
+        List<Pedido> pedidos = pedidoRepo.findAll();
+
+        List<PedidoResponseDTO> res = new ArrayList<>();
+        for (Pedido ped : pedidos) {
+
+            PedidoResponseDTO dto = new PedidoResponseDTO();
+
+            dto.setId_pedido(ped.getId_pedido());
+            dto.setId_user(ped.getUser().getId_user());
+            dto.setNumero_pedido(ped.getNumero_pedido());
+            dto.setEstado(ped.getEstado());
+            List<DetallePedidoResponseDTO> dtRes = new ArrayList<>();
+            for (DetallePedido det : ped.getDetalle_pedidos()) {
+
+                DetallePedidoResponseDTO d = new DetallePedidoResponseDTO();
+
+                d.setCant(det.getCant());
+                d.setId_producto(det.getProducto().getId_producto());
+                dtRes.add(d);
+
+            }
+            dto.setDetalle_pedidos(dtRes);
+
+            List<PagoResponseDTO> pagosResDTO = new ArrayList<>();
+            for (Pago pago : ped.getPagos()) {
+                PagoResponseDTO p = new PagoResponseDTO();
+                p.setId_pago(pago.getId_pago());
+                p.setNumero_pago(pago.getNumero_pago());
+                p.setSubtotal(pago.getSubtotal());
+                p.setIva(pago.getIva());
+                p.setMonto(pago.getMonto());
+                p.setTipo(pago.getTipo());
+                p.setFecha_registro(pago.getFecha_registro());
+                pagosResDTO.add(p);
+            }
+            dto.setPagos(pagosResDTO);
+
+            res.add(dto);
+        }
+        return res;
+
+    }
+
+    public boolean actualizarEstadoPedido(Long id_pedido) {
+
+        Pedido ped = pedidoRepo.findById(id_pedido).orElse(null);
+
+
+        if (ped == null) {
+            return false;
+        }
+
+        if ("Completado".equalsIgnoreCase(ped.getEstado())) {
+            ped.setEstado("Pendiente");
+        } else {
+            ped.setEstado("Completado");
+        }
+
+        pedidoRepo.save(ped);
+        return true;
+    }
+
+    public boolean deleteByState() {
+
+        List<Long> ids = new ArrayList<>();
+        List<Pedido> pedidos = pedidoRepo.findAll();
+        for (Pedido ped : pedidos) {
+            if (ped.getEstado().equals("Completado")) {
+                ids.add(ped.getId_pedido());
+            }
+        }
+
+        if (ids.isEmpty()) {
+            System.out.println("No se encontraron pedidos completados");
+            return false;
+        }
+
+        for (Long id : ids) {
+            pedidoRepo.deleteById(id);
+        }
+
+        return true;
     }
 
 }

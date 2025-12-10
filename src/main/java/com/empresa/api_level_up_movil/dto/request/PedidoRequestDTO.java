@@ -7,9 +7,9 @@ import java.util.List;
 @Data
 public class PedidoRequestDTO {
 
-    private int numero_pedido;
     private Long user_id;
+    private int numero_pedido;
+    private String estado;
+    private List<PagoRequestDTO> pagos;
     private List<DetallePedidoRequestDTO> detalles;
-
-
 }

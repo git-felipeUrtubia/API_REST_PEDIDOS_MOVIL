@@ -1,45 +1,46 @@
 package com.empresa.api_level_up_movil.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "pago")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_user;
+    private Long id_pago;
 
     @Column(nullable = false)
-    private String nombre;
+    private int numero_pago;
 
     @Column(nullable = false)
-    private String apellido;
+    private double subtotal;
 
     @Column(nullable = false)
-    private String email;
+    private double iva;
 
     @Column(nullable = false)
-    private String password;
+    private int monto;
 
     @Column(nullable = false)
-    private String rol;
+    private String tipo;
 
     @Column(nullable = false)
     private LocalDate fecha_registro;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference("user-pedidos")
-    private List<Pedido> pedidos;
+    @ManyToOne()
+    @JoinColumn(name = "id_pedido_fk")
+    @JsonBackReference("pedido-pago")
+    Pedido pedido;
 
 }

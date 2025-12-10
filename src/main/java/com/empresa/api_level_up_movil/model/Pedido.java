@@ -23,7 +23,10 @@ public class Pedido {
     @Column(nullable = false)
     private int numero_pedido;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private String estado;
+
+    @ManyToOne()
     @JoinColumn(name = "id_user_fk", nullable = false)
     @JsonBackReference("user-pedidos")
     private User user;
@@ -32,4 +35,8 @@ public class Pedido {
     @JsonManagedReference("pedido-detalle_pedidos")
     private List<DetallePedido> detalle_pedidos;
 
+    @Column(nullable = false)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonManagedReference("pedido-pago")
+    private List<Pago> pagos;
 }

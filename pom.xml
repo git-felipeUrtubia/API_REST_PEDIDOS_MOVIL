@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.empresa</groupId>
-    <artifactId>API_LEVEL_UP_MOVIL</artifactId>
+    <artifactId>LEVEL_UP_API</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>API_LEVEL_UP_MOVIL</name>
     <description>API_LEVEL_UP_MOVIL</description>
@@ -58,6 +58,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 

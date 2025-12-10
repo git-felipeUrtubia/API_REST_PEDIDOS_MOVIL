@@ -10,6 +10,8 @@ import java.util.List;
         "id_pedido",
         "id_user",
         "numero_pedido",
+        "estado",
+        "pagos",
         "detalle_pedidos"
 })
 @Data
@@ -18,6 +20,8 @@ public class PedidoResponseDTO {
     private Long id_pedido;
     private Long id_user;
     private int numero_pedido;
+    private String estado;
+    private List<PagoResponseDTO> pagos;
     private List<DetallePedidoResponseDTO> detalle_pedidos;
 
 }
