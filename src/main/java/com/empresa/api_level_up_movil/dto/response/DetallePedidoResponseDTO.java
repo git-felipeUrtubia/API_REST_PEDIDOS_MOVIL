@@ -8,4 +8,11 @@ public class DetallePedidoResponseDTO {
     private int cant;
     private Long id_producto;
 
+    @Data
+    public  static class ById{
+        private int cant;
+        private Long id_producto;
+        private String nombre;
+
+    }
 }

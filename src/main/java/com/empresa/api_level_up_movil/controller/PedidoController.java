@@ -55,7 +55,7 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         } catch (Exception e) {
-            System.out.println("Error Controller: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -142,6 +142,34 @@ public class PedidoController {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron pedidos completados");
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{id_pedido}")
+    public ResponseEntity<?> findPedidoById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id_pedido) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            String token = authHeader.substring(7);
+            String email = jwtService.validateTokenAndGetEmail(token);
+
+            UserResponseDTO user = userService.getUserByEmail(email);
+
+
+            if (user == null || !user.getRol().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acceso denegado");
+            }
+
+            PedidoResponseDTO.ById dto = pedidoService.getPedidoById(id_pedido);
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(dto);
 
         } catch (Exception e) {
             e.printStackTrace();

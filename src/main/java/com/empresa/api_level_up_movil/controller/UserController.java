@@ -31,7 +31,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
 
         } catch (Exception e) {
-            System.out.println("Error Controller: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
 

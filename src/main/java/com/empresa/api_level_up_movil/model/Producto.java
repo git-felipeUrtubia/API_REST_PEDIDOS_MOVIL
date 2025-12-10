@@ -26,7 +26,7 @@ public class Producto {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
+    @Column()
     private String poster;
 
     @Column(nullable = false)
@@ -37,6 +37,9 @@ public class Producto {
 
     @Column(nullable = false)
     private int stock;
+
+    @Column(nullable = false)
+    private String estado;
 
     @OneToMany(mappedBy = "producto")
     @JsonManagedReference("producto-detalle_pedidos")

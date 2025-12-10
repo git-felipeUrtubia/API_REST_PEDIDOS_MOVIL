@@ -24,4 +24,20 @@ public class PedidoResponseDTO {
     private List<PagoResponseDTO> pagos;
     private List<DetallePedidoResponseDTO> detalle_pedidos;
 
+    @JsonPropertyOrder({
+            "id_user",
+            "numero_pedido",
+            "estado",
+            "pagos",
+            "detalle_pedidos"
+    })
+    @Data
+    public static class ById {
+        private Long id_user;
+        private int numero_pedido;
+        private String estado;
+        private List<PagoResponseDTO> pagos;
+        private List<DetallePedidoResponseDTO.ById> detalle_pedidos;
+    }
+
 }

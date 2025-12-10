@@ -21,32 +21,29 @@ public class UserService {
 
     public UserResponseDTO saveUser(UserRequestDTO req) {
 
-        try {
 
-            User user = new User();
-            user.setNombre(req.getNombre());
-            user.setApellido(req.getApellido());
-            user.setEmail(req.getEmail());
-            user.setPassword(req.getPassword());
-            user.setRol(req.getRol());
-            user.setFecha_registro(req.getFecha_registro());
 
-            userRepo.save(user);
+        User user = new User();
+        user.setNombre(req.getNombre());
+        user.setApellido(req.getApellido());
+        user.setEmail(req.getEmail());
+        user.setPassword(req.getPassword());
+        user.setRol(req.getRol());
+        user.setFecha_registro(req.getFecha_registro());
 
-            UserResponseDTO res= new UserResponseDTO();
-            res.setId_user(user.getId_user());
-            res.setNombre(user.getNombre());
-            res.setApellido(user.getApellido());
-            res.setEmail(user.getEmail());
-            res.setRol(user.getRol());
-            res.setFecha_registro(user.getFecha_registro());
+        userRepo.save(user);
 
-            return res;
+        UserResponseDTO res= new UserResponseDTO();
+        res.setId_user(user.getId_user());
+        res.setNombre(user.getNombre());
+        res.setApellido(user.getApellido());
+        res.setEmail(user.getEmail());
+        res.setRol(user.getRol());
+        res.setFecha_registro(user.getFecha_registro());
 
-        } catch (Exception e) {
-            System.out.println("Error Service: " + e.getMessage());
-            return null;
-        }
+        return res;
+
+
 
     }
 

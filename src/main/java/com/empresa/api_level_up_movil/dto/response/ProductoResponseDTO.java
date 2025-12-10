@@ -10,7 +10,8 @@ import lombok.Data;
         "poster",
         "precio",
         "categoria",
-        "stock"
+        "stock",
+        "estado"
 })
 @Data
 public class ProductoResponseDTO {
@@ -22,5 +23,6 @@ public class ProductoResponseDTO {
     private int precio;
     private String categoria;
     private int stock;
+    private String estado;
 
 }
