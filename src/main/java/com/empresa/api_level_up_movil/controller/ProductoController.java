@@ -182,4 +182,20 @@ public class ProductoController {
         }
     }
 
+    @GetMapping("/cat/{req}")
+    public ResponseEntity<List<ProductoResponseDTO>> findByCategoria(@PathVariable String req ) {
+        try {
+
+            List<ProductoResponseDTO> res = productoService.findByCategoria(req);
+            if (res == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+            return ResponseEntity.ok(res);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

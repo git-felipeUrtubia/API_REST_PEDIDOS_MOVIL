@@ -249,4 +249,26 @@ public class ProductoService {
 
     }
 
+    public List<ProductoResponseDTO> findByCategoria(String req) {
+        List<ProductoResponseDTO> res = new ArrayList<>();
+
+        for( Producto p : productoRepo.findAll() ) {
+            if(p.getCategoria().equals(req)) {
+                ProductoResponseDTO dto = new ProductoResponseDTO();
+                dto.setId_producto(p.getId_producto());
+                dto.setNombre(p.getNombre());
+                dto.setDescripcion(p.getDescripcion());
+                dto.setPoster(p.getPoster());
+                dto.setPrecio(p.getPrecio());
+                dto.setCategoria(p.getCategoria());
+                dto.setStock(p.getStock());
+                res.add(dto);
+            }
+        }
+        if (res.isEmpty()) {
+            return null;
+        }
+        return res;
+    }
+
 }
